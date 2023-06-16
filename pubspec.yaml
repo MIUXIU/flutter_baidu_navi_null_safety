@@ -1,8 +1,7 @@
 name: flutter_baidu_navi
 description: A new flutter plugin project.
-version: 0.0.1
-author:
-homepage:
+version: 1.0.0
+homepage: https://github.com/MIUXIU/flutter_baidu_navi_null_safety
 
 environment:
   sdk: '>=2.19.3 <3.0.0'
