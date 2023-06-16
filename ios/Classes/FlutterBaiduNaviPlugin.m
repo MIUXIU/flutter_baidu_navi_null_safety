@@ -53,6 +53,7 @@ static FlutterResult _result;
       double endLon = [call.arguments[@"endLon"] doubleValue];
       double endLat = [call.arguments[@"endLat"] doubleValue];
       [self startNaviWithStartLon:startLon startLat:startLat endLon:endLon endLat:endLat];
+  } else if([@"setAgreePrivacy" isEqualToString:call.method]){
   } else {
       result(FlutterMethodNotImplemented);
   }
@@ -60,6 +61,16 @@ static FlutterResult _result;
 
 /// 初始化百度导航，含地图导航授权，TTS授权 - 启动时调用
 - (void)initNaviWithMapAppKey: (NSString *)mapAppKey ttsAppId: (NSString *)ttsAppId ttsApiKey: (NSString *)ttsApiKey ttsSecretKey: (NSString *)ttsSecretKey  {
+
+    [BNaviService setAgreePrivacy:YES];
+    // 要使用百度地图，请先启动BaiduMapManager
+    BMKMapManager *mapManager = [[BMKMapManager alloc] init];
+    // 如果要关注网络及授权验证事件，请设定generalDelegate参数
+    BOOL ret = [mapManager start:mapAppKey  generalDelegate:nil];
+    if (!ret) {
+        NSLog(@"启动引擎失败");
+    }
+
     [[BNaviService getInstance] initNaviService:nil success:^{
         [[BNaviService getInstance] authorizeNaviAppKey:mapAppKey completion:^(BOOL navResult) {
             NSLog(@"authorizeNaviAppKey ret = %d",navResult);
@@ -82,6 +93,7 @@ static FlutterResult _result;
         NSLog(@"百度导航初始化失败");
         _result(@(BaiduNaviInitResultFail));
     }];
+
 }
 
 - (void)startNaviWithStartLon: (double)startLon startLat: (double)startLat endLon: (double)endLon endLat: (double)endLat {
